@@ -1,0 +1,24 @@
+{
+  "name": "jarvis",
+  "version": "1.0.0",
+  "description": "Assistente pessoal JARVIS",
+  "type": "module",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js"
+  },
+  "keywords": [
+    "jarvis",
+    "assistente",
+    "ia",
+    "inteligencia-artificial"
+  ],
+  "author": "Saulo",
+  "license": "ISC",
+  "dependencies": {
+    "@google/genai": "^2.28.0",
+    "dotenv": "^18.0.6",
+    "express": "^5.2.1"
+  }
+}

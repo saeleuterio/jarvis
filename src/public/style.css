@@ -1,0 +1,258 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+
+    min-height: 100vh;
+
+    background:
+        radial-gradient(
+            circle at center,
+            #142a35,
+            #071117 50%,
+            #020608
+        );
+
+    color: #d8faff;
+
+    font-family: Arial, sans-serif;
+}
+
+
+.interface {
+
+    min-height: 100vh;
+
+    display: flex;
+
+    flex-direction: column;
+}
+
+
+header {
+
+    height: 70px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    padding: 0 35px;
+
+    border-bottom:
+        1px solid
+        rgba(100, 220, 255, .2);
+}
+
+
+.logo {
+
+    font-size: 22px;
+
+    letter-spacing: 5px;
+
+    font-weight: bold;
+}
+
+
+.status {
+
+    color: #75ffcf;
+
+    font-size: 13px;
+
+    letter-spacing: 2px;
+}
+
+
+main {
+
+    flex: 1;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    padding: 50px 20px;
+}
+
+
+.orb {
+
+    width: 170px;
+
+    height: 170px;
+
+    border-radius: 50%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border:
+        2px solid
+        rgba(100,220,255,.5);
+
+    box-shadow:
+        0 0 30px
+        rgba(100,220,255,.3);
+}
+
+
+.orb-core {
+
+    width: 70px;
+
+    height: 70px;
+
+    border-radius: 50%;
+
+    background: #8beaff;
+
+    box-shadow:
+        0 0 30px #8beaff,
+        0 0 70px
+        rgba(100,220,255,.7);
+
+    animation: pulsar 2s infinite;
+}
+
+
+@keyframes pulsar {
+
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.15);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+
+.greeting {
+
+    margin-top: 30px;
+
+    text-align: center;
+}
+
+
+.greeting h1 {
+
+    font-size: 25px;
+
+    font-weight: normal;
+}
+
+
+.greeting p {
+
+    margin-top: 10px;
+
+    opacity: .6;
+}
+
+
+.chat {
+
+    width: min(800px, 100%);
+
+    margin-top: 30px;
+
+    max-height: 350px;
+
+    overflow-y: auto;
+}
+
+
+.message {
+
+    padding: 15px;
+
+    margin-bottom: 12px;
+
+    border-radius: 10px;
+
+    line-height: 1.5;
+}
+
+
+.user {
+
+    background:
+        rgba(100,220,255,.1);
+}
+
+
+.jarvis {
+
+    background:
+        rgba(100,255,200,.08);
+}
+
+
+footer {
+
+    display: flex;
+
+    gap: 10px;
+
+    width: min(850px, 100%);
+
+    margin: auto;
+
+    padding: 20px;
+}
+
+
+input {
+
+    flex: 1;
+
+    padding: 15px;
+
+    border-radius: 8px;
+
+    border:
+        1px solid
+        rgba(100,220,255,.3);
+
+    background:
+        rgba(0,0,0,.35);
+
+    color: white;
+
+    outline: none;
+}
+
+
+button {
+
+    padding: 0 25px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background: #8beaff;
+
+    color: #031016;
+
+    font-weight: bold;
+
+    cursor: pointer;
+}
