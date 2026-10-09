@@ -1,6 +1,6 @@
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -12,45 +12,26 @@ function criarMemoriaInicial() {
     usuario: {
       nome: "Saulo",
     },
-
     fatos: [],
-
     preferencias: [],
-
     projetos: [],
-
     tarefas: [],
   };
 }
 
-function carregarMemoria() {
-  try {
-    if (!fs.existsSync(arquivoMemoria)) {
-      const memoria = criarMemoriaInicial();
-
-      salvarMemoria(memoria);
-
-      return memoria;
-    }
-
-    const dados = fs.readFileSync(arquivoMemoria, "utf-8");
-
-    return JSON.parse(dados);
-  } catch (erro) {
-    console.error("Erro ao carregar memória:", erro);
-
-    return criarMemoriaInicial();
-  }
+function salvarMemoria(memoria) {
+  fs.writeFileSync(arquivoMemoria, JSON.stringify(memoria, null, 4), "utf8");
 }
 
-function salvarMemoria(memoria) {
-  fs.writeFileSync(
-    arquivoMemoria,
+function carregarMemoria() {
+  if (!fs.existsSync(arquivoMemoria)) {
+    const memoria = criarMemoriaInicial();
+    salvarMemoria(memoria);
+    return memoria;
+  }
 
-    JSON.stringify(memoria, null, 4),
-
-    "utf-8",
-  );
+  const dados = fs.readFileSync(arquivoMemoria, "utf8");
+  return JSON.parse(dados);
 }
 
 export function obterMemoria() {
@@ -62,11 +43,12 @@ export function adicionarFato(fato) {
 
   memoria.fatos.push({
     texto: fato,
-
     data: new Date().toISOString(),
   });
 
   salvarMemoria(memoria);
+
+  console.log("Fato gravado no arquivo:", fato);
 }
 
 export function adicionarProjeto(projeto) {
@@ -74,11 +56,12 @@ export function adicionarProjeto(projeto) {
 
   memoria.projetos.push({
     nome: projeto,
-
     data: new Date().toISOString(),
   });
 
   salvarMemoria(memoria);
+
+  console.log("Projeto gravado no arquivo:", projeto);
 }
 
 export function definirNome(nome) {
@@ -87,4 +70,6 @@ export function definirNome(nome) {
   memoria.usuario.nome = nome;
 
   salvarMemoria(memoria);
+
+  console.log("Nome atualizado na memória:", nome);
 }
