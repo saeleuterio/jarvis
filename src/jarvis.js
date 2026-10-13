@@ -22,9 +22,15 @@ Você é JARVIS, um assistente pessoal de Saulo.
 Responda sempre em português do Brasil.
 Seja educado, inteligente, objetivo e prestativo.
 Use as informações da memória quando forem relevantes.
-Nunca invente informações pessoais nem afirme ter executado ações
-que o sistema não realizou.
+Considere as mensagens anteriores para compreender perguntas
+de acompanhamento e manter a continuidade da conversa.
+Nunca invente informações pessoais nem afirme ter executado
+ações que o sistema não realizou.
 `;
+
+// Histórico temporário: mantém as últimas 10 interações.
+const historicoConversa = [];
+const MAX_MENSAGENS_HISTORICO = 20;
 
 function limparComando(mensagem) {
   return mensagem
@@ -36,47 +42,37 @@ function limparComando(mensagem) {
 function processarComandoMemoria(mensagem) {
   const texto = limparComando(mensagem);
 
-  // Salvar um projeto explicitamente
   const projeto = texto.match(
     /^lembre que meu projeto(?: atual)?\s*(?:é|e|:)?\s+(.+)$/i,
   );
 
   if (projeto?.[1]?.trim()) {
-    const resultado = adicionarProjeto(projeto[1].trim());
-
     return {
       tipo: "salvar",
-      resultado,
+      resultado: adicionarProjeto(projeto[1].trim()),
     };
   }
 
-  // Salvar fatos explicitamente
   const fato = texto.match(/^lembre que\s+(.+)$/i);
 
   if (fato?.[1]?.trim()) {
-    const resultado = adicionarFato(fato[1].trim());
-
     return {
       tipo: "salvar",
-      resultado,
+      resultado: adicionarFato(fato[1].trim()),
     };
   }
 
-  // Esquecer uma informação específica
   const esquecer = texto.match(
     /^(?:esqueça|esqueca|apague|remova|delete)\s+(?:a informação sobre|a informacao sobre|que|o registro sobre)?\s*(.+)$/i,
   );
 
   if (esquecer?.[1]?.trim()) {
-    const removidos = removerMemoria(esquecer[1].trim());
-
     return {
       tipo: "remover",
-      removidos,
+      removidos: removerMemoria(esquecer[1].trim()),
     };
   }
 
-  // Pesquisar explicitamente na memória
   const consultar = texto.match(
     /^(?:o que você lembra sobre|o que voce lembra sobre|consulte minha memória sobre|consulte minha memoria sobre)\s+(.+)$/i,
   );
@@ -99,9 +95,27 @@ MEMÓRIA PESSOAL:
 
 ${JSON.stringify(memoria, null, 2)}
 
-Utilize a memória acima para responder.
+Utilize a memória acima para responder quando for relevante.
 Se não houver informação suficiente, diga isso claramente.
 `;
+}
+
+function guardarNoHistorico(mensagemUsuario, respostaJarvis) {
+  historicoConversa.push(
+    {
+      role: "user",
+      parts: [{ text: mensagemUsuario }],
+    },
+    {
+      role: "model",
+      parts: [{ text: respostaJarvis }],
+    },
+  );
+
+  // Limita o histórico às 20 mensagens mais recentes.
+  while (historicoConversa.length > MAX_MENSAGENS_HISTORICO) {
+    historicoConversa.shift();
+  }
 }
 
 export async function perguntarAoJarvis(mensagem) {
@@ -169,17 +183,28 @@ export async function perguntarAoJarvis(mensagem) {
 
   console.log("Enviando mensagem para o Gemini...");
 
+  const mensagens = [
+    ...historicoConversa,
+    {
+      role: "user",
+      parts: [{ text: mensagem }],
+    },
+  ];
+
   const resposta = await ai.models.generateContent({
     model: "gemini-2.5-flash",
-    contents: `${montarContextoMemoria()}\n\nMensagem do usuário:\n${mensagem}`,
+    contents: mensagens,
     config: {
-      systemInstruction: INSTRUCOES_JARVIS,
+      systemInstruction: `${INSTRUCOES_JARVIS}\n\n${montarContextoMemoria()}`,
     },
   });
 
+  const textoResposta =
+    resposta.text || "Desculpe, senhor Saulo. Não consegui gerar uma resposta.";
+
+  guardarNoHistorico(mensagem, textoResposta);
+
   console.log("Gemini respondeu.");
 
-  return (
-    resposta.text || "Desculpe, senhor Saulo. Não consegui gerar uma resposta."
-  );
+  return textoResposta;
 }
