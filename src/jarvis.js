@@ -1,194 +1,177 @@
 import "dotenv/config";
-
 import { GoogleGenAI } from "@google/genai";
 
 import {
   obterMemoria,
   adicionarFato,
   adicionarProjeto,
+  buscarMemoria,
+  removerMemoria,
 } from "./memory/memory.js";
-
-// ======================================================
-// CONFIGURAÇÃO DA API DO GEMINI
-// ======================================================
 
 const apiKey = process.env.GEMINI_API_KEY;
 
 if (!apiKey) {
-  throw new Error("GEMINI_API_KEY não encontrada. Confira o arquivo .env.");
+  throw new Error("GEMINI_API_KEY não encontrada no arquivo .env.");
 }
 
-const ai = new GoogleGenAI({
-  apiKey,
-});
-
-// ======================================================
-// PERSONALIDADE DO JARVIS
-// ======================================================
+const ai = new GoogleGenAI({ apiKey });
 
 const INSTRUCOES_JARVIS = `
-Você é JARVIS, um assistente pessoal digital.
-
-Seu usuário é Saulo.
-
-PERSONALIDADE:
-- Inteligente, educado, objetivo e prestativo.
-- Calmo, sofisticado e levemente bem-humorado.
-- Converse sempre em português do Brasil.
-- Quando apropriado, trate o usuário como "senhor Saulo".
-
-MEMÓRIA:
-- Você recebe informações da memória local do usuário.
-- Utilize os fatos e projetos fornecidos para responder.
-- Quando uma informação estiver registrada, responda com base nela.
-- Nunca invente informações pessoais.
-- Se não encontrar a resposta na memória, diga que não encontrou.
-- Não afirme que salvou informações sem confirmação do sistema.
-
-LIMITAÇÕES:
-- Não afirme que controla o computador ou executa ações externas.
-- Não diga que realizou ações que não foram realmente executadas.
+Você é JARVIS, um assistente pessoal de Saulo.
+Responda sempre em português do Brasil.
+Seja educado, inteligente, objetivo e prestativo.
+Use as informações da memória quando forem relevantes.
+Nunca invente informações pessoais nem afirme ter executado ações
+que o sistema não realizou.
 `;
 
-// ======================================================
-// PROCESSAR COMANDOS DE MEMÓRIA
-// ======================================================
-
-function processarMemoria(mensagem) {
-  const texto = mensagem
+function limparComando(mensagem) {
+  return mensagem
     .trim()
     .replace(/^jarvis[\s,!:.-]*/i, "")
     .trim();
+}
 
-  // Salvar projetos
-  const comandoProjeto = texto.match(
-    /^lembre que meu projeto(?: atual)?(?:\s+é|\s*:)??\s+(.+)$/i,
+function processarComandoMemoria(mensagem) {
+  const texto = limparComando(mensagem);
+
+  // Salvar um projeto explicitamente
+  const projeto = texto.match(
+    /^lembre que meu projeto(?: atual)?\s*(?:é|e|:)?\s+(.+)$/i,
   );
 
-  if (comandoProjeto && comandoProjeto[1]?.trim()) {
-    const projeto = comandoProjeto[1].trim();
-
-    adicionarProjeto(projeto);
+  if (projeto?.[1]?.trim()) {
+    const resultado = adicionarProjeto(projeto[1].trim());
 
     return {
-      salvo: true,
-      tipo: "projeto",
-      texto: projeto,
+      tipo: "salvar",
+      resultado,
     };
   }
 
-  // Salvar fatos gerais
-  const comandoFato = texto.match(/^lembre que\s+(.+)$/i);
+  // Salvar fatos explicitamente
+  const fato = texto.match(/^lembre que\s+(.+)$/i);
 
-  if (comandoFato && comandoFato[1]?.trim()) {
-    const fato = comandoFato[1].trim();
-
-    adicionarFato(fato);
+  if (fato?.[1]?.trim()) {
+    const resultado = adicionarFato(fato[1].trim());
 
     return {
-      salvo: true,
-      tipo: "fato",
-      texto: fato,
+      tipo: "salvar",
+      resultado,
     };
   }
 
-  return {
-    salvo: false,
-  };
+  // Esquecer uma informação específica
+  const esquecer = texto.match(
+    /^(?:esqueça|esqueca|apague|remova|delete)\s+(?:a informação sobre|a informacao sobre|que|o registro sobre)?\s*(.+)$/i,
+  );
+
+  if (esquecer?.[1]?.trim()) {
+    const removidos = removerMemoria(esquecer[1].trim());
+
+    return {
+      tipo: "remover",
+      removidos,
+    };
+  }
+
+  // Pesquisar explicitamente na memória
+  const consultar = texto.match(
+    /^(?:o que você lembra sobre|o que voce lembra sobre|consulte minha memória sobre|consulte minha memoria sobre)\s+(.+)$/i,
+  );
+
+  if (consultar?.[1]?.trim()) {
+    return {
+      tipo: "consulta",
+      resultados: buscarMemoria(consultar[1].trim()),
+    };
+  }
+
+  return null;
 }
 
-// ======================================================
-// FORMATAR MEMÓRIA PARA CONSULTA
-// ======================================================
+function montarContextoMemoria() {
+  const memoria = obterMemoria();
 
-function criarContextoMemoria(memoria) {
   return `
-MEMÓRIA PESSOAL DO USUÁRIO
+MEMÓRIA PESSOAL:
 
-Nome:
-${memoria.usuario?.nome ?? "Não informado"}
+${JSON.stringify(memoria, null, 2)}
 
-Fatos registrados:
-${JSON.stringify(memoria.fatos ?? [], null, 2)}
-
-Preferências registradas:
-${JSON.stringify(memoria.preferencias ?? [], null, 2)}
-
-Projetos registrados:
-${JSON.stringify(memoria.projetos ?? [], null, 2)}
-
-Tarefas registradas:
-${JSON.stringify(memoria.tarefas ?? [], null, 2)}
-
-Use essas informações para responder às perguntas pessoais.
-Se a resposta não estiver registrada, informe isso claramente.
+Utilize a memória acima para responder.
+Se não houver informação suficiente, diga isso claramente.
 `;
 }
-
-// ======================================================
-// FUNÇÃO PRINCIPAL DO JARVIS
-// ======================================================
 
 export async function perguntarAoJarvis(mensagem) {
   if (typeof mensagem !== "string" || !mensagem.trim()) {
     throw new Error("A mensagem não pode estar vazia.");
   }
 
-  // 1. Processar um possível comando de memória.
-  const resultadoMemoria = processarMemoria(mensagem);
+  const comando = processarComandoMemoria(mensagem);
 
-  // 2. Carregar novamente a memória após a gravação.
-  const memoria = obterMemoria();
+  if (comando?.tipo === "salvar") {
+    const resultado = comando.resultado;
 
-  console.log("Memória carregada.");
-
-  // 3. Preparar o contexto.
-  const contextoMemoria = criarContextoMemoria(memoria);
-
-  // 4. Se foi um comando de gravação, confirmar que a operação
-  // realmente foi concluída antes de responder ao usuário.
-  if (resultadoMemoria.salvo) {
-    const memoriaConfirmada = obterMemoria();
-
-    let encontrado = false;
-
-    if (resultadoMemoria.tipo === "fato") {
-      encontrado =
-        memoriaConfirmada.fatos?.some(
-          (item) => item.texto === resultadoMemoria.texto,
-        ) ?? false;
+    if (resultado.duplicado) {
+      return "Senhor Saulo, essa informação já estava registrada na minha memória. Não criei uma duplicata.";
     }
 
-    if (resultadoMemoria.tipo === "projeto") {
-      encontrado =
-        memoriaConfirmada.projetos?.some(
-          (item) => item.nome === resultadoMemoria.texto,
-        ) ?? false;
+    if (resultado.salvo) {
+      return `Informação registrada na categoria "${resultado.categoria}", senhor Saulo.`;
     }
 
-    if (!encontrado) {
-      throw new Error(
-        "A informação não foi encontrada após a tentativa de gravação.",
-      );
-    }
-
-    return `Entendido, senhor Saulo. Registrei na minha memória: "${resultadoMemoria.texto}".`;
+    return "Não consegui confirmar a gravação da informação.";
   }
 
-  // 5. Consultar o Gemini quando a mensagem não for um comando
-  // de gravação reconhecido.
+  if (comando?.tipo === "remover") {
+    if (comando.removidos.length === 0) {
+      return "Não encontrei informações correspondentes para remover.";
+    }
+
+    return `Removi ${comando.removidos.length} registro(s) correspondente(s) da memória.`;
+  }
+
+  if (comando?.tipo === "consulta") {
+    if (comando.resultados.length === 0) {
+      return "Não encontrei essa informação na memória local.";
+    }
+
+    return (
+      "Encontrei estas informações na memória:\n" +
+      comando.resultados
+        .map((item) => `- [${item.categoria}] ${item.texto}`)
+        .join("\n")
+    );
+  }
+
+  // Consultas naturais simples: responder diretamente da memória.
+  const texto = limparComando(mensagem).toLowerCase();
+  const memoria = obterMemoria();
+
+  if (
+    /^(o que estou estudando|o que eu estou estudando|qual é meu projeto atual|qual e meu projeto atual)\??$/.test(
+      texto,
+    )
+  ) {
+    const estudo = /estudando/.test(texto);
+    const registros = estudo
+      ? buscarMemoria("estudando")
+      : memoria.categorias.projetos;
+
+    if (registros.length === 0) {
+      return "Não encontrei essa informação na memória local.";
+    }
+
+    return registros.map((item) => item.texto).join("\n");
+  }
+
   console.log("Enviando mensagem para o Gemini...");
 
   const resposta = await ai.models.generateContent({
     model: "gemini-2.5-flash",
-
-    contents: `
-${contextoMemoria}
-
-MENSAGEM DO USUÁRIO:
-${mensagem}
-`,
-
+    contents: `${montarContextoMemoria()}\n\nMensagem do usuário:\n${mensagem}`,
     config: {
       systemInstruction: INSTRUCOES_JARVIS,
     },
