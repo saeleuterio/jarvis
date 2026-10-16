@@ -9,6 +9,8 @@ import {
   removerMemoria,
 } from "./memory/memory.js";
 
+import { obterHistorico, registrarInteracao } from "./memory/history.js";
+
 const apiKey = process.env.GEMINI_API_KEY;
 
 if (!apiKey) {
@@ -28,10 +30,6 @@ Nunca invente informações pessoais nem afirme ter executado
 ações que o sistema não realizou.
 `;
 
-// Histórico temporário: mantém as últimas 10 interações.
-const historicoConversa = [];
-const MAX_MENSAGENS_HISTORICO = 20;
-
 function limparComando(mensagem) {
   return mensagem
     .trim()
@@ -42,6 +40,7 @@ function limparComando(mensagem) {
 function processarComandoMemoria(mensagem) {
   const texto = limparComando(mensagem);
 
+  // Salvar um projeto explicitamente.
   const projeto = texto.match(
     /^lembre que meu projeto(?: atual)?\s*(?:é|e|:)?\s+(.+)$/i,
   );
@@ -53,6 +52,7 @@ function processarComandoMemoria(mensagem) {
     };
   }
 
+  // Salvar fatos explicitamente.
   const fato = texto.match(/^lembre que\s+(.+)$/i);
 
   if (fato?.[1]?.trim()) {
@@ -62,6 +62,7 @@ function processarComandoMemoria(mensagem) {
     };
   }
 
+  // Esquecer uma informação específica.
   const esquecer = texto.match(
     /^(?:esqueça|esqueca|apague|remova|delete)\s+(?:a informação sobre|a informacao sobre|que|o registro sobre)?\s*(.+)$/i,
   );
@@ -73,6 +74,7 @@ function processarComandoMemoria(mensagem) {
     };
   }
 
+  // Pesquisar explicitamente na memória.
   const consultar = texto.match(
     /^(?:o que você lembra sobre|o que voce lembra sobre|consulte minha memória sobre|consulte minha memoria sobre)\s+(.+)$/i,
   );
@@ -100,21 +102,65 @@ Se não houver informação suficiente, diga isso claramente.
 `;
 }
 
-function guardarNoHistorico(mensagemUsuario, respostaJarvis) {
-  historicoConversa.push(
-    {
-      role: "user",
-      parts: [{ text: mensagemUsuario }],
-    },
-    {
-      role: "model",
-      parts: [{ text: respostaJarvis }],
-    },
-  );
+// Registra interações comuns e comandos de memória.
+function finalizarInteracao(pergunta, resposta) {
+  registrarInteracao(pergunta, resposta);
+  return resposta;
+}
 
-  // Limita o histórico às 20 mensagens mais recentes.
-  while (historicoConversa.length > MAX_MENSAGENS_HISTORICO) {
-    historicoConversa.shift();
+function responderComandoMemoria(comando, mensagem) {
+  if (comando.tipo === "salvar") {
+    const resultado = comando.resultado;
+
+    if (resultado.duplicado) {
+      return finalizarInteracao(
+        mensagem,
+        "Senhor Saulo, essa informação já estava registrada na minha memória. Não criei uma duplicata.",
+      );
+    }
+
+    if (resultado.salvo) {
+      return finalizarInteracao(
+        mensagem,
+        `Informação registrada na categoria "${resultado.categoria}", senhor Saulo.`,
+      );
+    }
+
+    return finalizarInteracao(
+      mensagem,
+      "Não consegui confirmar a gravação da informação.",
+    );
+  }
+
+  if (comando.tipo === "remover") {
+    if (comando.removidos.length === 0) {
+      return finalizarInteracao(
+        mensagem,
+        "Não encontrei informações correspondentes para remover.",
+      );
+    }
+
+    return finalizarInteracao(
+      mensagem,
+      `Removi ${comando.removidos.length} registro(s) correspondente(s) da memória.`,
+    );
+  }
+
+  if (comando.tipo === "consulta") {
+    if (comando.resultados.length === 0) {
+      return finalizarInteracao(
+        mensagem,
+        "Não encontrei essa informação na memória local.",
+      );
+    }
+
+    const resposta =
+      "Encontrei estas informações na memória:\n" +
+      comando.resultados
+        .map((item) => `- [${item.categoria}] ${item.texto}`)
+        .join("\n");
+
+    return finalizarInteracao(mensagem, resposta);
   }
 }
 
@@ -123,41 +169,11 @@ export async function perguntarAoJarvis(mensagem) {
     throw new Error("A mensagem não pode estar vazia.");
   }
 
+  // Os comandos existentes continuam funcionando.
   const comando = processarComandoMemoria(mensagem);
 
-  if (comando?.tipo === "salvar") {
-    const resultado = comando.resultado;
-
-    if (resultado.duplicado) {
-      return "Senhor Saulo, essa informação já estava registrada na minha memória. Não criei uma duplicata.";
-    }
-
-    if (resultado.salvo) {
-      return `Informação registrada na categoria "${resultado.categoria}", senhor Saulo.`;
-    }
-
-    return "Não consegui confirmar a gravação da informação.";
-  }
-
-  if (comando?.tipo === "remover") {
-    if (comando.removidos.length === 0) {
-      return "Não encontrei informações correspondentes para remover.";
-    }
-
-    return `Removi ${comando.removidos.length} registro(s) correspondente(s) da memória.`;
-  }
-
-  if (comando?.tipo === "consulta") {
-    if (comando.resultados.length === 0) {
-      return "Não encontrei essa informação na memória local.";
-    }
-
-    return (
-      "Encontrei estas informações na memória:\n" +
-      comando.resultados
-        .map((item) => `- [${item.categoria}] ${item.texto}`)
-        .join("\n")
-    );
+  if (comando) {
+    return responderComandoMemoria(comando, mensagem);
   }
 
   // Consultas naturais simples: responder diretamente da memória.
@@ -170,21 +186,31 @@ export async function perguntarAoJarvis(mensagem) {
     )
   ) {
     const estudo = /estudando/.test(texto);
+
     const registros = estudo
       ? buscarMemoria("estudando")
       : memoria.categorias.projetos;
 
-    if (registros.length === 0) {
-      return "Não encontrei essa informação na memória local.";
-    }
+    const resposta =
+      registros.length === 0
+        ? "Não encontrei essa informação na memória local."
+        : registros.map((item) => item.texto).join("\n");
 
-    return registros.map((item) => item.texto).join("\n");
+    return finalizarInteracao(mensagem, resposta);
   }
 
   console.log("Enviando mensagem para o Gemini...");
 
+  // Recupera o histórico persistente.
+  // Envia somente os campos aceitos pelo formato de conversa do Gemini.
+  const historico = obterHistorico().map((item) => ({
+    role: item.role,
+    parts: item.parts,
+  }));
+
+  // Adiciona a pergunta atual sem registrá-la duas vezes.
   const mensagens = [
-    ...historicoConversa,
+    ...historico,
     {
       role: "user",
       parts: [{ text: mensagem }],
@@ -202,7 +228,8 @@ export async function perguntarAoJarvis(mensagem) {
   const textoResposta =
     resposta.text || "Desculpe, senhor Saulo. Não consegui gerar uma resposta.";
 
-  guardarNoHistorico(mensagem, textoResposta);
+  // Salva a pergunta e a resposta no arquivo JSON.
+  finalizarInteracao(mensagem, textoResposta);
 
   console.log("Gemini respondeu.");
 

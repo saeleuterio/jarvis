@@ -1,0 +1,15 @@
+{
+    "usuario": {
+        "nome": "Saulo"
+    },
+    "categorias": {
+        "perfil": [],
+        "estudos": [],
+        "veiculos": [],
+        "viagens": [],
+        "projetos": [],
+        "preferencias": [],
+        "tarefas": [],
+        "geral": []
+    }
+}
