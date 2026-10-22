@@ -7,8 +7,8 @@ const __dirname = path.dirname(__filename);
 
 const ARQUIVO_HISTORICO = path.join(__dirname, "historico.json");
 
-// Guarda no máximo 20 mensagens: 10 perguntas e 10 respostas.
-const MAX_MENSAGENS = 20;
+// Limite de mensagens usado como contexto recente para o Gemini.
+const MAX_MENSAGENS_CONTEXTO = 20;
 
 function garantirArquivo() {
   if (!fs.existsSync(ARQUIVO_HISTORICO)) {
@@ -20,7 +20,8 @@ function garantirArquivo() {
   }
 }
 
-export function obterHistorico() {
+// Retorna todo o histórico armazenado.
+export function obterHistoricoCompleto() {
   garantirArquivo();
 
   const conteudo = fs.readFileSync(ARQUIVO_HISTORICO, "utf8");
@@ -32,7 +33,12 @@ export function obterHistorico() {
     );
   }
 
-  return dados.mensagens.slice(-MAX_MENSAGENS);
+  return dados.mensagens;
+}
+
+// Retorna somente as mensagens recentes para o contexto do Gemini.
+export function obterHistorico() {
+  return obterHistoricoCompleto().slice(-MAX_MENSAGENS_CONTEXTO);
 }
 
 export function registrarInteracao(pergunta, resposta) {
@@ -45,7 +51,7 @@ export function registrarInteracao(pergunta, resposta) {
     throw new Error("Pergunta e resposta precisam ser textos válidos.");
   }
 
-  const mensagens = obterHistorico();
+  const mensagens = obterHistoricoCompleto();
 
   mensagens.push(
     {
@@ -60,10 +66,7 @@ export function registrarInteracao(pergunta, resposta) {
     },
   );
 
-  const dados = {
-    mensagens: mensagens.slice(-MAX_MENSAGENS),
-  };
-
+  const dados = { mensagens };
   const arquivoTemporario = `${ARQUIVO_HISTORICO}.tmp`;
 
   fs.writeFileSync(arquivoTemporario, JSON.stringify(dados, null, 2), "utf8");
