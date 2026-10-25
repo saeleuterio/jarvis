@@ -73,3 +73,60 @@ export function registrarInteracao(pergunta, resposta) {
 
   fs.renameSync(arquivoTemporario, ARQUIVO_HISTORICO);
 }
+
+
+export function buscarHistorico(consulta, limite = 10) {
+  if (typeof consulta !== "string" || !consulta.trim()) {
+    return [];
+  }
+
+  const palavras = consulta
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .split(/\s+/)
+    .filter((palavra) => palavra.length >= 3);
+
+  if (palavras.length === 0) {
+    return [];
+  }
+
+  const mensagens = obterHistoricoCompleto();
+
+  const resultados = mensagens
+    .map((mensagem, indice) => {
+      const texto = (mensagem.parts ?? [])
+        .map((parte) => parte.text ?? "")
+        .join(" ");
+
+      const textoNormalizado = texto
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "");
+
+      const correspondencias = palavras.filter((palavra) =>
+        textoNormalizado.includes(palavra),
+      ).length;
+
+      return {
+        mensagem,
+        indice,
+        texto,
+        pontuacao: correspondencias,
+      };
+    })
+    .filter((item) => item.pontuacao > 0)
+    .sort((a, b) => b.pontuacao - a.pontuacao || b.indice - a.indice);
+
+  const quantidade = Number.isInteger(limite)
+    ? Math.max(0, Math.min(limite, 50))
+    : 10;
+
+  return resultados.slice(0, quantidade).map((item) => ({
+    role: item.mensagem.role,
+    texto: item.texto,
+    data: item.mensagem.data ?? null,
+    pontuacao: item.pontuacao,
+  }));
+}
+
