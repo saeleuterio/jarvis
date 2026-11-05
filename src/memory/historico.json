@@ -215,6 +215,132 @@
         }
       ],
       "data": "2026-11-05T18:58:41.850Z"
+    },
+    {
+      "role": "user",
+      "parts": [
+        {
+          "text": "Estou estudando JavaScript e pretendo trabalhar com programação."
+        }
+      ],
+      "data": "2026-11-05T19:04:03.161Z"
+    },
+    {
+      "role": "model",
+      "parts": [
+        {
+          "text": "Compreendido, Saulo! É ótimo saber que você está estudando JavaScript e que seu objetivo é trabalhar com programação.\n\nRegistrei na sua memória que você **está estudando JavaScript e pretende trabalhar com programação**.\n\nSe precisar de ajuda com materiais, dicas ou qualquer dúvida sobre seus estudos, pode me perguntar!\n\nPosso guardar essa informação na minha memória para utilizar em conversas futuras? Responda SIM ou NÃO."
+        }
+      ],
+      "data": "2026-11-05T19:04:03.161Z"
+    },
+    {
+      "role": "user",
+      "parts": [
+        {
+          "text": "Sim"
+        }
+      ],
+      "data": "2026-11-05T19:04:13.430Z"
+    },
+    {
+      "role": "model",
+      "parts": [
+        {
+          "text": "Informação salva na categoria \"estudos\", senhor Saulo."
+        }
+      ],
+      "data": "2026-11-05T19:04:13.430Z"
+    },
+    {
+      "role": "user",
+      "parts": [
+        {
+          "text": "O que você lembra sobre JavaScript?"
+        }
+      ],
+      "data": "2026-11-05T19:04:47.772Z"
+    },
+    {
+      "role": "model",
+      "parts": [
+        {
+          "text": "Encontrei estas informações na memória:\n- [estudos] estou estudando JavaScript.\n- [estudos] Estou estudando JavaScript e pretendo trabalhar com programação."
+        }
+      ],
+      "data": "2026-11-05T19:04:47.772Z"
+    },
+    {
+      "role": "user",
+      "parts": [
+        {
+          "text": "Moro em uma cidade pequena e gosto de viajar de bicicleta."
+        }
+      ],
+      "data": "2026-11-05T19:05:34.319Z"
+    },
+    {
+      "role": "model",
+      "parts": [
+        {
+          "text": "Compreendido, Saulo! É interessante saber que você mora em uma cidade pequena e que gosta de viajar de bicicleta.\n\nPosso guardar essa informação na sua memória pessoal para futuras referências? Responda SIM ou NÃO.\n\nPosso guardar essa informação na minha memória para utilizar em conversas futuras? Responda SIM ou NÃO."
+        }
+      ],
+      "data": "2026-11-05T19:05:34.319Z"
+    },
+    {
+      "role": "user",
+      "parts": [
+        {
+          "text": "Não"
+        }
+      ],
+      "data": "2026-11-05T19:05:38.143Z"
+    },
+    {
+      "role": "model",
+      "parts": [
+        {
+          "text": "Tudo bem, senhor Saulo. Não salvei essa informação."
+        }
+      ],
+      "data": "2026-11-05T19:05:38.143Z"
+    },
+    {
+      "role": "user",
+      "parts": [
+        {
+          "text": "Moro em uma cidade pequena e gosto de viajar de bicicleta."
+        }
+      ],
+      "data": "2026-11-05T19:06:02.173Z"
+    },
+    {
+      "role": "model",
+      "parts": [
+        {
+          "text": "Compreendido, Saulo. Entendi que você mora em uma cidade pequena e gosta de viajar de bicicleta.\n\nPosso guardar essa informação na minha memória para utilizar em conversas futuras? Responda SIM ou NÃO."
+        }
+      ],
+      "data": "2026-11-05T19:06:02.173Z"
+    },
+    {
+      "role": "user",
+      "parts": [
+        {
+          "text": "Não"
+        }
+      ],
+      "data": "2026-11-05T19:06:05.239Z"
+    },
+    {
+      "role": "model",
+      "parts": [
+        {
+          "text": "Tudo bem, senhor Saulo. Não salvei essa informação."
+        }
+      ],
+      "data": "2026-11-05T19:06:05.239Z"
     }
   ]
 }

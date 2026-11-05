@@ -44,6 +44,9 @@ Se não houver informações suficientes para responder sobre uma conversa
 anterior, informe isso claramente.
 `;
 
+// Informação que aguarda confirmação do usuário.
+let memoriaPendente = null;
+
 function limparComando(mensagem) {
   return mensagem
     .trim()
@@ -51,10 +54,17 @@ function limparComando(mensagem) {
     .trim();
 }
 
+function normalizar(texto) {
+  return String(texto)
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .trim();
+}
+
 function processarComandoMemoria(mensagem) {
   const texto = limparComando(mensagem);
 
-  // Salvar um projeto explicitamente.
   const projeto = texto.match(
     /^lembre que meu projeto(?: atual)?\s*(?:é|e|:)?\s+(.+)$/i,
   );
@@ -66,7 +76,6 @@ function processarComandoMemoria(mensagem) {
     };
   }
 
-  // Salvar fatos explicitamente.
   const fato = texto.match(/^lembre que\s+(.+)$/i);
 
   if (fato?.[1]?.trim()) {
@@ -76,7 +85,6 @@ function processarComandoMemoria(mensagem) {
     };
   }
 
-  // Esquecer uma informação específica.
   const esquecer = texto.match(
     /^(?:esqueça|esqueca|apague|remova|delete)\s+(?:a informação sobre|a informacao sobre|que|o registro sobre)?\s*(.+)$/i,
   );
@@ -88,7 +96,6 @@ function processarComandoMemoria(mensagem) {
     };
   }
 
-  // Consultar explicitamente a memória pessoal.
   const consultar = texto.match(
     /^(?:o que você lembra sobre|o que voce lembra sobre|consulte minha memória sobre|consulte minha memoria sobre)\s+(.+)$/i,
   );
@@ -116,7 +123,6 @@ Se não houver informação suficiente, diga isso claramente.
 `;
 }
 
-// Pesquisa conversas antigas e recupera perguntas junto com respostas.
 function montarContextoHistorico(mensagem) {
   const consulta = limparComando(mensagem);
   const resultados = buscarHistorico(consulta, 10);
@@ -165,10 +171,122 @@ ${trechos}
 `;
 }
 
-// Registra interações comuns e comandos de memória.
 function finalizarInteracao(pergunta, resposta) {
   registrarInteracao(pergunta, resposta);
   return resposta;
+}
+
+// Identifica declarações pessoais que podem ser úteis futuramente.
+function identificarInformacaoRelevante(mensagem) {
+  const texto = limparComando(mensagem);
+  const t = normalizar(texto);
+
+  // Evita guardar perguntas, comandos ou textos muito longos.
+  if (
+    texto.length < 12 ||
+    texto.length > 250 ||
+    /\?$/.test(texto) ||
+    /^(lembre que|esqueca|esqueça|apague|remova|delete)\b/i.test(t)
+  ) {
+    return null;
+  }
+
+  const indicadores = [
+    /\bmeu nome e\b/,
+    /\bme chamo\b/,
+    /\bmoro em\b/,
+    /\bsou casado\b/,
+    /\bminha esposa\b/,
+    /\bmeu trabalho\b/,
+    /\bminha profissao\b/,
+    /\beu trabalho\b/,
+    /\bestou estudando\b/,
+    /\bestudo\b/,
+    /\bmeu curso\b/,
+    /\bmeu projeto\b/,
+    /\bmeu objetivo\b/,
+    /\bmeu carro\b/,
+    /\bminha bicicleta\b/,
+    /\bminha bicicleta\b/,
+    /\bminha preferencia\b/,
+    /\beu prefiro\b/,
+    /\beu gosto\b/,
+    /\beu nao gosto\b/,
+  ];
+
+  const relevante = indicadores.some((regra) => regra.test(t));
+
+  if (!relevante) {
+    return null;
+  }
+
+  const projeto = /\b(meu projeto|meu aplicativo|meu sistema|meu site)\b/.test(
+    t,
+  );
+
+  return {
+    texto,
+    categoria: projeto ? "projetos" : "fato",
+  };
+}
+
+// Verifica se o usuário confirmou ou recusou o salvamento.
+function processarConfirmacao(mensagem) {
+  if (!memoriaPendente) {
+    return null;
+  }
+
+  const resposta = normalizar(limparComando(mensagem));
+
+  const confirmou =
+    /^(sim|sim pode|pode|pode salvar|salve|salvar|confirmo|confirmado|isso|claro|pode guardar)[.! ]*$/.test(
+      resposta,
+    );
+
+  const recusou =
+    /^(nao|não|nao quero|não quero|cancele|cancelar|deixa|deixa pra la|deixa pra lá)[.! ]*$/.test(
+      resposta,
+    );
+
+  if (!confirmou && !recusou) {
+    return null;
+  }
+
+  if (recusou) {
+    memoriaPendente = null;
+
+    return finalizarInteracao(
+      mensagem,
+      "Tudo bem, senhor Saulo. Não salvei essa informação.",
+    );
+  }
+
+  const pendente = memoriaPendente;
+  memoriaPendente = null;
+
+  const resultado =
+    pendente.categoria === "projetos"
+      ? adicionarProjeto(pendente.texto)
+      : adicionarFato(pendente.texto);
+
+  if (resultado.duplicado) {
+    return finalizarInteracao(
+      mensagem,
+      "Essa informação já estava registrada na minha memória. Não criei uma duplicata.",
+    );
+  }
+
+  if (resultado.salvo) {
+    return finalizarInteracao(
+      mensagem,
+      `Informação salva na categoria "${resultado.categoria}", senhor Saulo.`,
+    );
+  }
+
+  return finalizarInteracao(
+    mensagem,
+    "Não consegui confirmar a gravação da informação.",
+  );
 }
 
 function responderComandoMemoria(comando, mensagem) {
@@ -232,7 +350,14 @@ export async function perguntarAoJarvis(mensagem) {
     throw new Error("A mensagem não pode estar vazia.");
   }
 
-  // Mantém os comandos existentes de memória.
+  // Primeiro verifica uma confirmação pendente.
+  const confirmacao = processarConfirmacao(mensagem);
+
+  if (confirmacao) {
+    return confirmacao;
+  }
+
+  // Comandos manuais de memória continuam funcionando.
   const comando = processarComandoMemoria(mensagem);
 
   if (comando) {
@@ -242,7 +367,6 @@ export async function perguntarAoJarvis(mensagem) {
   const texto = limparComando(mensagem).toLowerCase();
   const memoria = obterMemoria();
 
-  // Consultas simples respondidas diretamente pela memória pessoal.
   if (
     /^(o que estou estudando|o que eu estou estudando|qual é meu projeto atual|qual e meu projeto atual)\??$/.test(
       texto,
@@ -264,16 +388,13 @@ export async function perguntarAoJarvis(mensagem) {
 
   console.log("Enviando mensagem para o Gemini...");
 
-  // Recupera as mensagens recentes para continuidade da conversa.
   const historico = obterHistorico().map((item) => ({
     role: item.role,
     parts: item.parts,
   }));
 
-  // Recupera conversas antigas agrupadas.
   const contextoHistorico = montarContextoHistorico(mensagem);
 
-  // Adiciona a pergunta atual sem registrá-la duas vezes.
   const mensagens = [
     ...historico,
     {
@@ -296,10 +417,18 @@ ${contextoHistorico}
     },
   });
 
-  const textoResposta =
+  let textoResposta =
     resposta.text || "Desculpe, senhor Saulo. Não consegui gerar uma resposta.";
 
-  // Salva a pergunta e a resposta no histórico completo.
+  // Se encontrar uma informação pessoal relevante, pede autorização.
+  const informacao = identificarInformacaoRelevante(mensagem);
+
+  if (informacao) {
+    memoriaPendente = informacao;
+
+    textoResposta += `\n\nPosso guardar essa informação na minha memória para utilizar em conversas futuras? Responda SIM ou NÃO.`;
+  }
+
   finalizarInteracao(mensagem, textoResposta);
 
   console.log("Gemini respondeu.");
