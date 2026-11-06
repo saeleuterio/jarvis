@@ -38,38 +38,71 @@ function normalizar(texto) {
     .trim();
 }
 
+// Classifica informações com prioridade para a categoria
+// mais específica antes das categorias mais abrangentes.
 function classificarInformacao(texto) {
   const t = normalizar(texto);
 
+  // Tarefas e compromissos
   if (
-    /\b(estud|curso|programacao|javascript|html|css|faculdade|aprend)\w*/.test(
+    /\b(tarefa|preciso fazer|tenho que|lembrete|prazo|agendar|pendente|resolver)\b/.test(
+      t,
+    )
+  ) {
+    return "tarefas";
+  }
+
+  // Projetos pessoais e desenvolvimento
+  if (
+    /\b(projeto|jarvis|aplicativo|sistema|site|desenvolvimento|programa|software)\b/.test(
+      t,
+    )
+  ) {
+    return "projetos";
+  }
+
+  // Veículos, bicicletas e equipamentos de transporte
+  if (
+    /\b(carro|veiculo|moto|motocicleta|bicicleta|bike|mtb|automovel|caminhonete|sprinter|oggi|fox|yaris)\b/.test(
+      t,
+    )
+  ) {
+    return "veiculos";
+  }
+
+  // Viagens, destinos e turismo
+  if (
+    /\b(viagem|viajar|ushuaia|cruzeiro|ferias|destino|roteiro|passeio|turismo|hospedagem|pousada|hotel)\b/.test(
+      t,
+    )
+  ) {
+    return "viagens";
+  }
+
+  // Preferências pessoais
+  if (
+    /\b(prefiro|preferencia|gosto|nao gosto|adoro|detesto|costumo|estilo preferido)\b/.test(
+      t,
+    )
+  ) {
+    return "preferencias";
+  }
+
+  // Estudos e aprendizado
+  if (
+    /\b(estud|curso|programacao|javascript|python|html|css|java|faculdade|aprend|formacao|certificacao|universidade)\w*/.test(
       t,
     )
   ) {
     return "estudos";
   }
 
-  if (/\b(carro|veiculo|moto|fox|yaris|automovel)\w*/.test(t)) {
-    return "veiculos";
-  }
-
-  if (/\b(viagem|viajar|ushuaia|cruzeiro|ferias|destino)\w*/.test(t)) {
-    return "viagens";
-  }
-
-  if (/\b(projeto|jarvis|aplicativo|sistema|site|desenvolvimento)\w*/.test(t)) {
-    return "projetos";
-  }
-
-  if (/\b(prefiro|preferencia|gosto|nao gosto|quero respostas)\b/.test(t)) {
-    return "preferencias";
-  }
-
-  if (/\b(tarefa|preciso fazer|tenho que|lembrete|prazo)\b/.test(t)) {
-    return "tarefas";
-  }
-
-  if (/\b(meu nome|me chamo|moro em|minha profissao|meu trabalho)\b/.test(t)) {
+  // Perfil e informações pessoais/profissionais
+  if (
+    /\b(meu nome|me chamo|moro em|minha profissao|meu trabalho|trabalho na|trabalho como|sou policial|policia militar|sou casado|minha esposa|minha familia|minha idade)\b/.test(
+      t,
+    )
+  ) {
     return "perfil";
   }
 
@@ -97,7 +130,6 @@ function migrarMemoriaAntiga(dados) {
     }
   }
 
-  // Preserva fatos existentes na versão anterior.
   if (Array.isArray(dados.fatos)) {
     for (const fato of dados.fatos) {
       const texto = typeof fato === "string" ? fato : fato.texto;
@@ -113,7 +145,6 @@ function migrarMemoriaAntiga(dados) {
     }
   }
 
-  // Preserva projetos existentes na versão anterior.
   if (Array.isArray(dados.projetos)) {
     for (const projeto of dados.projetos) {
       const texto = typeof projeto === "string" ? projeto : projeto.nome;
@@ -158,7 +189,6 @@ function carregarMemoria() {
 
   const memoria = migrarMemoriaAntiga(dados);
 
-  // Atualiza o formato do arquivo quando necessário.
   if (!dados.categorias) {
     salvarArquivo(memoria);
   }
@@ -198,7 +228,6 @@ function inserirSemDuplicar(memoria, categoria, texto, dataOriginal) {
 export function obterMemoria() {
   const memoria = carregarMemoria();
 
-  // Mantém compatibilidade com o jarvis.js da V1.1.
   const fatos = Object.entries(memoria.categorias)
     .filter(([categoria]) => categoria !== "projetos")
     .flatMap(([, registros]) =>

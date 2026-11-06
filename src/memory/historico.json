@@ -521,6 +521,330 @@
         }
       ],
       "data": "2026-11-05T19:18:16.926Z"
+    },
+    {
+      "role": "user",
+      "parts": [
+        {
+          "text": "Estou aprendendo Python para criar meus próprios sistemas"
+        }
+      ],
+      "data": "2026-11-05T19:20:27.377Z"
+    },
+    {
+      "role": "model",
+      "parts": [
+        {
+          "text": "Compreendido, Saulo! Já tenho registrado em sua memória pessoal que você está aprendendo Python para criar seus próprios sistemas.\n\nEssa informação já consta na minha memória permanente, então não vou criar outro registro. Se tiver alguma dúvida ou precisar de algo relacionado a isso, pode me dizer!\n\nEssa informação já consta na minha memória permanente. Não vou criar outro registro."
+        }
+      ],
+      "data": "2026-11-05T19:20:27.377Z"
+    },
+    {
+      "role": "user",
+      "parts": [
+        {
+          "text": "Estou aprendendo Python."
+        }
+      ],
+      "data": "2026-11-05T19:22:38.314Z"
+    },
+    {
+      "role": "model",
+      "parts": [
+        {
+          "text": "Compreendido, Saulo! Já tenho registrado que você está aprendendo Python, tanto para desenvolver aplicações quanto para criar seus próprios sistemas. É ótimo que esteja focado nisso!\n\nSe tiver alguma pergunta ou precisar de ajuda com seus estudos em Python, pode me dizer.\n\nPosso guardar essa informação na minha memória permanente para utilizar em conversas futuras? Responda SIM ou NÃO."
+        }
+      ],
+      "data": "2026-11-05T19:22:38.314Z"
+    },
+    {
+      "role": "user",
+      "parts": [
+        {
+          "text": "sim"
+        }
+      ],
+      "data": "2026-11-05T19:22:40.721Z"
+    },
+    {
+      "role": "model",
+      "parts": [
+        {
+          "text": "Informação salva na categoria \"estudos\", senhor Saulo."
+        }
+      ],
+      "data": "2026-11-05T19:22:40.721Z"
+    },
+    {
+      "role": "user",
+      "parts": [
+        {
+          "text": "Minha bicicleta é uma Oggi 7.0."
+        }
+      ],
+      "data": "2026-11-05T19:22:52.822Z"
+    },
+    {
+      "role": "model",
+      "parts": [
+        {
+          "text": "Compreendido, Saulo! Entendi que sua bicicleta é uma Oggi 7.0.\n\nGostaria que eu guardasse essa informação na sua memória permanente para futuras referências? Responda SIM ou NÃO.\n\nPosso guardar essa informação na minha memória permanente para utilizar em conversas futuras? Responda SIM ou NÃO."
+        }
+      ],
+      "data": "2026-11-05T19:22:52.822Z"
+    },
+    {
+      "role": "user",
+      "parts": [
+        {
+          "text": "sim"
+        }
+      ],
+      "data": "2026-11-05T19:22:56.380Z"
+    },
+    {
+      "role": "model",
+      "parts": [
+        {
+          "text": "Informação salva na categoria \"veiculos\", senhor Saulo."
+        }
+      ],
+      "data": "2026-11-05T19:22:56.380Z"
+    },
+    {
+      "role": "user",
+      "parts": [
+        {
+          "text": "Pretendo viajar para Ushuaia."
+        }
+      ],
+      "data": "2026-11-05T19:23:05.902Z"
+    },
+    {
+      "role": "model",
+      "parts": [
+        {
+          "text": "Compreendido, Saulo! Entendi que você pretende viajar para Ushuaia.\n\nGostaria que eu guardasse essa informação na sua memória permanente para futuras referências? Responda SIM ou NÃO.\n\nPosso guardar essa informação na minha memória permanente para utilizar em conversas futuras? Responda SIM ou NÃO."
+        }
+      ],
+      "data": "2026-11-05T19:23:05.902Z"
+    },
+    {
+      "role": "user",
+      "parts": [
+        {
+          "text": "sim"
+        }
+      ],
+      "data": "2026-11-05T19:23:09.480Z"
+    },
+    {
+      "role": "model",
+      "parts": [
+        {
+          "text": "Informação salva na categoria \"viagens\", senhor Saulo."
+        }
+      ],
+      "data": "2026-11-05T19:23:09.480Z"
+    },
+    {
+      "role": "user",
+      "parts": [
+        {
+          "text": "Trabalho na Polícia Militar."
+        }
+      ],
+      "data": "2026-11-05T19:46:56.777Z"
+    },
+    {
+      "role": "model",
+      "parts": [
+        {
+          "text": "Compreendido, Saulo! Entendi que você trabalha na Polícia Militar.\n\nGostaria que eu guardasse essa informação na sua memória permanente, na categoria \"perfil\", para futuras referências? Responda SIM ou NÃO.\n\nPosso guardar essa informação na minha memória permanente para utilizar em conversas futuras? Responda SIM ou NÃO."
+        }
+      ],
+      "data": "2026-11-05T19:46:56.777Z"
+    },
+    {
+      "role": "user",
+      "parts": [
+        {
+          "text": "Estou aprendendo Python."
+        }
+      ],
+      "data": "2026-11-06T12:48:25.113Z"
+    },
+    {
+      "role": "model",
+      "parts": [
+        {
+          "text": "Compreendido, Saulo! Já tenho registrado em sua memória que você está aprendendo Python, tanto para desenvolver aplicações quanto para criar seus próprios sistemas e, de forma geral, que está aprendendo Python.\n\nEssa informação já consta na minha memória permanente, então não vou criar outro registro. Se tiver alguma dúvida ou precisar de algo relacionado a seus estudos em Python, pode me dizer!\n\nEssa informação já consta na minha memória permanente. Não vou criar outro registro."
+        }
+      ],
+      "data": "2026-11-06T12:48:25.113Z"
+    },
+    {
+      "role": "user",
+      "parts": [
+        {
+          "text": "Minha bicicleta é uma Oggi 7.0."
+        }
+      ],
+      "data": "2026-11-06T12:48:34.344Z"
+    },
+    {
+      "role": "model",
+      "parts": [
+        {
+          "text": "Compreendido, Saulo! Já tenho registrado em sua memória que sua bicicleta é uma Oggi 7.0.\n\nEssa informação já consta na minha memória permanente, então não vou criar outro registro. Se precisar de algo relacionado a isso, pode me dizer!\n\nEssa informação já consta na minha memória permanente. Não vou criar outro registro.\n\nEssa informação já consta na minha memória permanente. Não vou criar outro registro."
+        }
+      ],
+      "data": "2026-11-06T12:48:34.344Z"
+    },
+    {
+      "role": "user",
+      "parts": [
+        {
+          "text": "Pretendo viajar para Ushuaia."
+        }
+      ],
+      "data": "2026-11-06T12:48:44.334Z"
+    },
+    {
+      "role": "model",
+      "parts": [
+        {
+          "text": "Compreendido, Saulo! Já tenho registrado em sua memória que você pretende viajar para Ushuaia.\n\nEssa informação já consta na minha memória permanente, então não vou criar outro registro. Se precisar de algo relacionado a essa viagem ou tiver alguma dúvida, pode me dizer!"
+        }
+      ],
+      "data": "2026-11-06T12:48:44.334Z"
+    },
+    {
+      "role": "user",
+      "parts": [
+        {
+          "text": "Prefiro respostas objetivas."
+        }
+      ],
+      "data": "2026-11-06T12:48:58.991Z"
+    },
+    {
+      "role": "model",
+      "parts": [
+        {
+          "text": "Compreendido, Saulo! Entendi que você prefere respostas objetivas.\n\nGostaria que eu guardasse essa preferência na sua memória permanente para que eu possa sempre me lembrar dela em nossas futuras interações? Responda SIM ou NÃO."
+        }
+      ],
+      "data": "2026-11-06T12:48:58.991Z"
+    },
+    {
+      "role": "user",
+      "parts": [
+        {
+          "text": "sim"
+        }
+      ],
+      "data": "2026-11-06T12:49:02.644Z"
+    },
+    {
+      "role": "model",
+      "parts": [
+        {
+          "text": "Informação salva na categoria \"preferencias\", senhor Saulo."
+        }
+      ],
+      "data": "2026-11-06T12:49:02.644Z"
+    },
+    {
+      "role": "user",
+      "parts": [
+        {
+          "text": "Trabalho na Polícia Militar."
+        }
+      ],
+      "data": "2026-11-06T12:49:10.759Z"
+    },
+    {
+      "role": "model",
+      "parts": [
+        {
+          "text": "Compreendido, Saulo! Entendi que você trabalha na Polícia Militar.\n\nGostaria que eu guardasse essa informação na sua memória permanente, na categoria \"perfil\", para futuras referências? Responda SIM ou NÃO.\n\nPosso guardar essa informação na minha memória permanente para utilizar em conversas futuras? Responda SIM ou NÃO."
+        }
+      ],
+      "data": "2026-11-06T12:49:10.759Z"
+    },
+    {
+      "role": "user",
+      "parts": [
+        {
+          "text": "Trabalho na Polícia Militar."
+        }
+      ],
+      "data": "2026-11-06T12:49:26.609Z"
+    },
+    {
+      "role": "model",
+      "parts": [
+        {
+          "text": "Compreendido, Saulo! Entendi que você trabalha na Polícia Militar.\n\nGostaria que eu guardasse essa informação na sua memória permanente, na categoria \"perfil\", para futuras referências? Responda SIM ou NÃO.\n\nPosso guardar essa informação na minha memória permanente para utilizar em conversas futuras? Responda SIM ou NÃO."
+        }
+      ],
+      "data": "2026-11-06T12:49:26.609Z"
+    },
+    {
+      "role": "user",
+      "parts": [
+        {
+          "text": "sim"
+        }
+      ],
+      "data": "2026-11-06T12:49:33.096Z"
+    },
+    {
+      "role": "model",
+      "parts": [
+        {
+          "text": "Informação salva na categoria \"perfil\", senhor Saulo."
+        }
+      ],
+      "data": "2026-11-06T12:49:33.096Z"
+    },
+    {
+      "role": "user",
+      "parts": [
+        {
+          "text": "Meu projeto é desenvolver um assistente pessoal."
+        }
+      ],
+      "data": "2026-11-06T12:49:42.947Z"
+    },
+    {
+      "role": "model",
+      "parts": [
+        {
+          "text": "Compreendido, Saulo! Entendi que seu projeto é desenvolver um assistente pessoal.\n\nGostaria que eu guardasse essa informação na sua memória permanente, na categoria \"projetos\", para futuras referências? Responda SIM ou NÃO.\n\nPosso guardar essa informação na minha memória permanente para utilizar em conversas futuras? Responda SIM ou NÃO."
+        }
+      ],
+      "data": "2026-11-06T12:49:42.947Z"
+    },
+    {
+      "role": "user",
+      "parts": [
+        {
+          "text": "sim"
+        }
+      ],
+      "data": "2026-11-06T12:49:46.278Z"
+    },
+    {
+      "role": "model",
+      "parts": [
+        {
+          "text": "Informação salva na categoria \"projetos\", senhor Saulo."
+        }
+      ],
+      "data": "2026-11-06T12:49:46.278Z"
     }
   ]
 }
