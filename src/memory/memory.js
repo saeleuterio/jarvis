@@ -38,12 +38,9 @@ function normalizar(texto) {
     .trim();
 }
 
-// Classifica informações com prioridade para a categoria
-// mais específica antes das categorias mais abrangentes.
 function classificarInformacao(texto) {
   const t = normalizar(texto);
 
-  // Tarefas e compromissos
   if (
     /\b(tarefa|preciso fazer|tenho que|lembrete|prazo|agendar|pendente|resolver)\b/.test(
       t,
@@ -52,7 +49,6 @@ function classificarInformacao(texto) {
     return "tarefas";
   }
 
-  // Projetos pessoais e desenvolvimento
   if (
     /\b(projeto|jarvis|aplicativo|sistema|site|desenvolvimento|programa|software)\b/.test(
       t,
@@ -61,7 +57,6 @@ function classificarInformacao(texto) {
     return "projetos";
   }
 
-  // Veículos, bicicletas e equipamentos de transporte
   if (
     /\b(carro|veiculo|moto|motocicleta|bicicleta|bike|mtb|automovel|caminhonete|sprinter|oggi|fox|yaris)\b/.test(
       t,
@@ -70,7 +65,6 @@ function classificarInformacao(texto) {
     return "veiculos";
   }
 
-  // Viagens, destinos e turismo
   if (
     /\b(viagem|viajar|ushuaia|cruzeiro|ferias|destino|roteiro|passeio|turismo|hospedagem|pousada|hotel)\b/.test(
       t,
@@ -79,7 +73,6 @@ function classificarInformacao(texto) {
     return "viagens";
   }
 
-  // Preferências pessoais
   if (
     /\b(prefiro|preferencia|gosto|nao gosto|adoro|detesto|costumo|estilo preferido)\b/.test(
       t,
@@ -88,7 +81,6 @@ function classificarInformacao(texto) {
     return "preferencias";
   }
 
-  // Estudos e aprendizado
   if (
     /\b(estud|curso|programacao|javascript|python|html|css|java|faculdade|aprend|formacao|certificacao|universidade)\w*/.test(
       t,
@@ -97,7 +89,6 @@ function classificarInformacao(texto) {
     return "estudos";
   }
 
-  // Perfil e informações pessoais/profissionais
   if (
     /\b(meu nome|me chamo|moro em|minha profissao|meu trabalho|trabalho na|trabalho como|sou policial|policia militar|sou casado|minha esposa|minha familia|minha idade)\b/.test(
       t,
@@ -283,6 +274,86 @@ export function adicionarFato(texto) {
 
 export function adicionarProjeto(texto) {
   return adicionarInformacao(texto, "projetos");
+}
+
+// NOVA FUNÇÃO: atualiza um registro existente pelo ID.
+// Preserva o ID e a data original de criação.
+export function atualizarInformacao(id, novoTexto, categoriaDestino) {
+  if (typeof id !== "string" || !id.trim()) {
+    throw new Error("ID da informação não informado.");
+  }
+
+  if (typeof novoTexto !== "string" || !novoTexto.trim()) {
+    throw new Error("A nova informação não pode estar vazia.");
+  }
+
+  const memoria = carregarMemoria();
+
+  let registroEncontrado = null;
+  let categoriaAtual = null;
+
+  for (const categoria of CATEGORIAS) {
+    const registro = memoria.categorias[categoria].find(
+      (item) => item.id === id,
+    );
+
+    if (registro) {
+      registroEncontrado = registro;
+      categoriaAtual = categoria;
+      break;
+    }
+  }
+
+  if (!registroEncontrado) {
+    return {
+      salvo: false,
+      encontrado: false,
+      duplicado: false,
+    };
+  }
+
+  const destino = CATEGORIAS.includes(categoriaDestino)
+    ? categoriaDestino
+    : categoriaAtual;
+
+  const chave = normalizar(novoTexto);
+
+  const duplicado = memoria.categorias[destino].find(
+    (item) => item.id !== id && normalizar(item.texto) === chave,
+  );
+
+  if (duplicado) {
+    return {
+      salvo: false,
+      encontrado: true,
+      duplicado: true,
+      registro: duplicado,
+      categoria: destino,
+    };
+  }
+
+  if (destino !== categoriaAtual) {
+    memoria.categorias[categoriaAtual] = memoria.categorias[
+      categoriaAtual
+    ].filter((item) => item.id !== id);
+
+    memoria.categorias[destino].push(registroEncontrado);
+  }
+
+  registroEncontrado.texto = novoTexto.trim();
+  registroEncontrado.atualizadoEm = new Date().toISOString();
+
+  salvarArquivo(memoria);
+
+  console.log(`Memória atualizada [${destino}]: ${novoTexto}`);
+
+  return {
+    salvo: true,
+    encontrado: true,
+    duplicado: false,
+    registro: registroEncontrado,
+    categoria: destino,
+  };
 }
 
 export function definirNome(nome) {

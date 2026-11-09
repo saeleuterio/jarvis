@@ -845,6 +845,132 @@
         }
       ],
       "data": "2026-11-06T12:49:46.278Z"
+    },
+    {
+      "role": "user",
+      "parts": [
+        {
+          "text": "Agora estou estudando Python para desenvolver aplicações."
+        }
+      ],
+      "data": "2026-11-06T12:59:10.697Z"
+    },
+    {
+      "role": "model",
+      "parts": [
+        {
+          "text": "Compreendido, Saulo! Já tenho registrado em sua memória que você está estudando Python para desenvolver aplicações.\n\nEssa informação já consta na minha memória permanente, então não vou criar outro registro. Se precisar de alguma dica, recurso ou tiver dúvidas sobre Python, pode me perguntar!\n\nIdentifiquei uma possível atualização na categoria \"estudos\".\n\nRegistros atualmente salvos:\n1. estou estudando JavaScript.\n2. Estou estudando JavaScript e pretendo trabalhar com programação.\n3. Estou aprendendo Python para desenvolver aplicações.\n4. Estou aprendendo Python para criar meus próprios sistemas\n5. Estou aprendendo Python.\n\nNova informação:\nAgora estou estudando Python para desenvolver aplicações.\n\nO que deseja fazer?\n\n- Para substituir, informe SUBSTITUIR seguido do número do registro. Exemplo: SUBSTITUIR 1.\n- Para conservar o registro antigo e adicionar a nova informação, responda MANTER.\n- Para desistir sem alterar a memória, responda CANCELAR."
+        }
+      ],
+      "data": "2026-11-06T12:59:10.697Z"
+    },
+    {
+      "role": "user",
+      "parts": [
+        {
+          "text": "SUBSTITUIR 1"
+        }
+      ],
+      "data": "2026-11-06T13:00:12.963Z"
+    },
+    {
+      "role": "model",
+      "parts": [
+        {
+          "text": "Informação atualizada com sucesso na categoria \"estudos\". O registro anterior foi substituído."
+        }
+      ],
+      "data": "2026-11-06T13:00:12.963Z"
+    },
+    {
+      "role": "user",
+      "parts": [
+        {
+          "text": "Agora estou estudando Java para ampliar meus conhecimentos em programação."
+        }
+      ],
+      "data": "2026-11-06T13:03:25.165Z"
+    },
+    {
+      "role": "model",
+      "parts": [
+        {
+          "text": "Compreendido, Saulo! Entendi que agora você está estudando Java para ampliar seus conhecimentos em programação.\n\nGostaria que eu guardasse essa informação na sua memória permanente, na categoria \"estudos\", para futuras referências? Responda SIM ou NÃO.\n\nPosso guardar essa informação na minha memória permanente para utilizar em conversas futuras? Responda SIM ou NÃO.\n\nIdentifiquei uma possível atualização na categoria \"estudos\".\n\nRegistros atualmente salvos:\n1. Agora estou estudando Python para desenvolver aplicações.\n2. Estou estudando JavaScript e pretendo trabalhar com programação.\n3. Estou aprendendo Python para desenvolver aplicações.\n4. Estou aprendendo Python para criar meus próprios sistemas\n5. Estou aprendendo Python.\n\nNova informação:\nAgora estou estudando Java para ampliar meus conhecimentos em programação.\n\nO que deseja fazer?\n\n- Para substituir, informe SUBSTITUIR seguido do número do registro. Exemplo: SUBSTITUIR 1.\n- Para conservar o registro antigo e adicionar a nova informação, responda MANTER.\n- Para desistir sem alterar a memória, responda CANCELAR."
+        }
+      ],
+      "data": "2026-11-06T13:03:25.165Z"
+    },
+    {
+      "role": "user",
+      "parts": [
+        {
+          "text": "MANTER"
+        }
+      ],
+      "data": "2026-11-06T13:03:38.593Z"
+    },
+    {
+      "role": "model",
+      "parts": [
+        {
+          "text": "Informação salva na categoria \"estudos\", senhor Saulo."
+        }
+      ],
+      "data": "2026-11-06T13:03:38.593Z"
+    },
+    {
+      "role": "user",
+      "parts": [
+        {
+          "text": "Agora estou estudando Java para ampliar meus conhecimentos em programação."
+        }
+      ],
+      "data": "2026-11-09T19:50:41.160Z"
+    },
+    {
+      "role": "model",
+      "parts": [
+        {
+          "text": "Compreendido, Saulo! Já tenho registrado em sua memória que você está estudando Java para ampliar seus conhecimentos em programação.\n\nEssa informação já consta na minha memória permanente, então não vou criar outro registro. Se precisar de alguma dica, recurso ou tiver dúvidas sobre Java, pode me perguntar!\n\nEssa informação já consta na minha memória permanente. Não vou criar outro registro."
+        }
+      ],
+      "data": "2026-11-09T19:50:41.160Z"
+    },
+    {
+      "role": "user",
+      "parts": [
+        {
+          "text": "Agora estou estudando C++ para desenvolver outros projetos."
+        }
+      ],
+      "data": "2026-11-09T19:50:59.707Z"
+    },
+    {
+      "role": "model",
+      "parts": [
+        {
+          "text": "Compreendido, Saulo! Entendi que agora você está estudando C++ para desenvolver outros projetos.\n\nGostaria que eu guardasse essa informação na sua memória permanente, na categoria \"estudos\", para futuras referências? Responda SIM ou NÃO.\n\nPosso guardar essa informação na minha memória permanente para utilizar em conversas futuras? Responda SIM ou NÃO.\n\nIdentifiquei uma possível atualização na categoria \"estudos\".\n\nRegistros atualmente salvos:\n1. Agora estou estudando Python para desenvolver aplicações.\n2. Estou estudando JavaScript e pretendo trabalhar com programação.\n3. Estou aprendendo Python para desenvolver aplicações.\n4. Estou aprendendo Python para criar meus próprios sistemas\n5. Estou aprendendo Python.\n6. Agora estou estudando Java para ampliar meus conhecimentos em programação.\n\nNova informação:\nAgora estou estudando C++ para desenvolver outros projetos.\n\nO que deseja fazer?\n\n- Para substituir, informe SUBSTITUIR seguido do número do registro. Exemplo: SUBSTITUIR 1.\n- Para conservar o registro antigo e adicionar a nova informação, responda MANTER.\n- Para desistir sem alterar a memória, responda CANCELAR.\n\nIdentifiquei uma possível atualização na categoria \"estudos\".\n\nRegistros atualmente salvos:\n1. Agora estou estudando Python para desenvolver aplicações.\n2. Estou estudando JavaScript e pretendo trabalhar com programação.\n3. Estou aprendendo Python para desenvolver aplicações.\n4. Estou aprendendo Python para criar meus próprios sistemas\n5. Estou aprendendo Python.\n6. Agora estou estudando Java para ampliar meus conhecimentos em programação.\n\nNova informação:\nAgora estou estudando C++ para desenvolver outros projetos.\n\nO que deseja fazer?\n\n- Para substituir, informe SUBSTITUIR seguido do número do registro. Exemplo: SUBSTITUIR 1.\n- Para conservar o registro antigo e adicionar a nova informação, responda MANTER.\n- Para desistir sem alterar a memória, responda CANCELAR."
+        }
+      ],
+      "data": "2026-11-09T19:50:59.707Z"
+    },
+    {
+      "role": "user",
+      "parts": [
+        {
+          "text": "CANCELAR"
+        }
+      ],
+      "data": "2026-11-09T19:51:13.013Z"
+    },
+    {
+      "role": "model",
+      "parts": [
+        {
+          "text": "Atualização cancelada. Nenhuma informação foi alterada."
+        }
+      ],
+      "data": "2026-11-09T19:51:13.013Z"
     }
   ]
 }
