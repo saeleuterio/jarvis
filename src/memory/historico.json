@@ -1007,6 +1007,168 @@
         }
       ],
       "data": "2026-11-13T19:01:36.631Z"
+    },
+    {
+      "role": "user",
+      "parts": [
+        {
+          "text": "Estou estudando Python para desenvolver aplicações."
+        }
+      ],
+      "data": "2026-11-13T19:11:31.497Z"
+    },
+    {
+      "role": "model",
+      "parts": [
+        {
+          "text": "Essa informação já consta na minha memória permanente. Não vou criar outro registro."
+        }
+      ],
+      "data": "2026-11-13T19:11:31.497Z"
+    },
+    {
+      "role": "user",
+      "parts": [
+        {
+          "text": "Estou estudando Python para análise de dados."
+        }
+      ],
+      "data": "2026-11-13T19:11:47.377Z"
+    },
+    {
+      "role": "model",
+      "parts": [
+        {
+          "text": "Identifiquei uma possível atualização na categoria \"estudos\".\n\nRegistros relacionados atualmente salvos:\n1. Agora estou estudando Python para desenvolver aplicações.\n2. Estou aprendendo Python para desenvolver aplicações.\n3. Estou aprendendo Python para criar meus próprios sistemas\n4. Estou aprendendo Python.\n\nNova informação:\nEstou estudando Python para análise de dados.\n\nO que deseja fazer?\n\n- Para substituir, informe SUBSTITUIR seguido do número do registro. Exemplo: SUBSTITUIR 1.\n- Para conservar o registro antigo e adicionar a nova informação, responda MANTER.\n- Para desistir sem alterar a memória, responda CANCELAR."
+        }
+      ],
+      "data": "2026-11-13T19:11:47.377Z"
+    },
+    {
+      "role": "user",
+      "parts": [
+        {
+          "text": "mater"
+        }
+      ],
+      "data": "2026-11-13T19:12:46.690Z"
+    },
+    {
+      "role": "model",
+      "parts": [
+        {
+          "text": "Não identifiquei uma opção válida. Responda com o número do registro que deseja substituir, MANTER ou CANCELAR."
+        }
+      ],
+      "data": "2026-11-13T19:12:46.690Z"
+    },
+    {
+      "role": "user",
+      "parts": [
+        {
+          "text": "manter"
+        }
+      ],
+      "data": "2026-11-13T19:12:50.129Z"
+    },
+    {
+      "role": "model",
+      "parts": [
+        {
+          "text": "Informação salva na categoria \"estudos\", senhor Saulo."
+        }
+      ],
+      "data": "2026-11-13T19:12:50.129Z"
+    },
+    {
+      "role": "user",
+      "parts": [
+        {
+          "text": "Estou estudando JavaScript para desenvolvimento web."
+        }
+      ],
+      "data": "2026-11-13T19:13:02.750Z"
+    },
+    {
+      "role": "model",
+      "parts": [
+        {
+          "text": "Posso guardar essa informação na minha memória permanente para utilizar em conversas futuras? Responda SIM ou NÃO."
+        }
+      ],
+      "data": "2026-11-13T19:13:02.750Z"
+    },
+    {
+      "role": "user",
+      "parts": [
+        {
+          "text": "sim"
+        }
+      ],
+      "data": "2026-11-13T19:13:31.782Z"
+    },
+    {
+      "role": "model",
+      "parts": [
+        {
+          "text": "Informação salva na categoria \"projetos\", senhor Saulo."
+        }
+      ],
+      "data": "2026-11-13T19:13:31.782Z"
+    },
+    {
+      "role": "user",
+      "parts": [
+        {
+          "text": "Estou aprendendo JavaScript para desenvolvimento web."
+        }
+      ],
+      "data": "2026-11-13T19:13:42.629Z"
+    },
+    {
+      "role": "model",
+      "parts": [
+        {
+          "text": "Posso guardar essa informação na minha memória permanente para utilizar em conversas futuras? Responda SIM ou NÃO."
+        }
+      ],
+      "data": "2026-11-13T19:13:42.629Z"
+    },
+    {
+      "role": "user",
+      "parts": [
+        {
+          "text": "Estou estudando JavaScript para desenvolvimento web."
+        }
+      ],
+      "data": "2026-11-13T19:14:46.894Z"
+    },
+    {
+      "role": "model",
+      "parts": [
+        {
+          "text": "Essa informação já consta na minha memória permanente. Não vou criar outro registro."
+        }
+      ],
+      "data": "2026-11-13T19:14:46.894Z"
+    },
+    {
+      "role": "user",
+      "parts": [
+        {
+          "text": "Estou estudando JavaScript para desenvolvimento web."
+        }
+      ],
+      "data": "2026-11-13T19:15:02.057Z"
+    },
+    {
+      "role": "model",
+      "parts": [
+        {
+          "text": "Essa informação já consta na minha memória permanente. Não vou criar outro registro."
+        }
+      ],
+      "data": "2026-11-13T19:15:02.057Z"
     }
   ]
 }

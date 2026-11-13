@@ -205,13 +205,125 @@ function identificarTipoDeclaracaoAtiva(texto, categoria) {
   return null;
 }
 
-// Verifica se uma declaração antiga pertence ao mesmo tipo
-// de informação ativa da nova declaração.
-function localizarRegistrosRelacionados(memoria, categoria, tipo) {
+// V2.2: extrai o assunto principal de uma declaração.
+// Diferencia Python, Java e JavaScript, por exemplo.
+function extrairAssuntoDeclaracao(texto, categoria) {
+  const t = normalizar(texto);
+
+  if (categoria === "estudos") {
+    const assuntosConhecidos = [
+      "javascript",
+      "typescript",
+      "python",
+      "java",
+      "html",
+      "css",
+      "sql",
+      "node js",
+      "nodejs",
+      "react",
+      "angular",
+      "vue",
+      "php",
+      "ruby",
+      "kotlin",
+      "swift",
+      "rust",
+      "programacao",
+      "ciberseguranca",
+      "seguranca da informacao",
+      "analise de dados",
+    ];
+
+    for (const assunto of assuntosConhecidos) {
+      const padrao = new RegExp(`\\b${assunto.replace(/ /g, "\\s+")}\\b`);
+
+      if (padrao.test(t)) {
+        return assunto;
+      }
+    }
+
+    const estudo = t.match(
+      /(?:estudando|aprendendo|fazendo curso|estudo|curso de)\s+(.+?)(?:\s+para\b|\s+sobre\b|\s+com\b|$)/,
+    );
+
+    return estudo?.[1]?.trim() || null;
+  }
+
+  if (categoria === "projetos") {
+    const projeto = t.match(
+      /(?:meu projeto(?: atual)?|meu aplicativo|meu sistema|meu site|estou desenvolvendo|estou criando|pretendo desenvolver)\s*(?:e|:)?\s*(.+?)(?:\s+para\b|$)/,
+    );
+
+    return projeto?.[1]?.trim() || null;
+  }
+
+  return null;
+}
+
+// V2.2: cria uma representação comparável.
+// Remove diferenças no início da declaração, sem apagar o objetivo.
+function chaveDeclaracaoEquivalente(texto, categoria) {
+  let chave = normalizar(texto);
+
+  chave = chave
+    .replace(/^(?:agora|atualmente|hoje)\s+/, "")
+    .replace(/^(?:eu )?estou (?:estudando|aprendendo|fazendo curso)\s+/, "")
+    .replace(/^(?:quero aprender|pretendo aprender|estudo|aprendo)\s+/, "")
+    .replace(
+      /^(?:meu projeto(?: atual)?|meu aplicativo|meu sistema|meu site)\s*(?:e|:)?\s*/,
+      "",
+    )
+    .replace(
+      /^(?:estou desenvolvendo|estou criando|pretendo desenvolver)\s+/,
+      "",
+    )
+    .trim();
+
+  // Uniformiza algumas expressões equivalentes.
+  if (categoria === "estudos") {
+    chave = chave
+      .replace(/\bcriar meus proprios sistemas\b/g, "desenvolver aplicacoes")
+      .replace(/\bcriar sistemas\b/g, "desenvolver aplicacoes");
+  }
+
+  return chave;
+}
+
+// Verifica equivalência dentro da mesma categoria e assunto.
+function informacaoEquivalenteExiste(texto, categoria, memoria) {
+  const chaveNova = chaveDeclaracaoEquivalente(texto, categoria);
+  const assuntoNovo = extrairAssuntoDeclaracao(texto, categoria);
+
+  if (!chaveNova || !assuntoNovo) {
+    return false;
+  }
+
+  const registros = memoria.categorias[categoria] ?? [];
+
+  return registros.some((registro) => {
+    const assuntoSalvo = extrairAssuntoDeclaracao(registro.texto, categoria);
+
+    return (
+      assuntoSalvo === assuntoNovo &&
+      chaveDeclaracaoEquivalente(registro.texto, categoria) === chaveNova
+    );
+  });
+}
+
+// Localiza somente registros do mesmo tipo e do mesmo assunto.
+function localizarRegistrosRelacionados(memoria, categoria, tipo, assunto) {
+  if (!assunto) {
+    return [];
+  }
+
   const registros = memoria.categorias[categoria] ?? [];
 
   return registros.filter((registro) => {
-    return identificarTipoDeclaracaoAtiva(registro.texto, categoria) === tipo;
+    return (
+      identificarTipoDeclaracaoAtiva(registro.texto, categoria) === tipo &&
+      extrairAssuntoDeclaracao(registro.texto, categoria) === assunto
+    );
   });
 }
 
@@ -393,8 +505,6 @@ function identificarInformacaoRelevante(mensagem) {
     return null;
   }
 
-  // Se a informação já existe, encerra a análise aqui.
-  // Isso impede que a mesma frase também seja tratada como atualização.
   if (informacaoJaExiste(texto)) {
     return {
       jaExiste: true,
@@ -407,15 +517,24 @@ function identificarInformacaoRelevante(mensagem) {
 
   const memoria = obterMemoria();
 
-  // V2.1: procura declarações anteriores do mesmo tipo,
-  // mesmo quando a nova frase não contém um indicador explícito de atualização.
-  const tipoAtivo = identificarTipoDeclaracaoAtiva(texto, categoria);
+  // V2.2: verifica equivalência antes de procurar possíveis atualizações.
+  if (informacaoEquivalenteExiste(texto, categoria, memoria)) {
+    return {
+      jaExiste: true,
+      texto,
+    };
+  }
 
-  if (tipoAtivo) {
+  // V2.2: procura declarações anteriores do mesmo assunto.
+  const tipoAtivo = identificarTipoDeclaracaoAtiva(texto, categoria);
+  const assunto = extrairAssuntoDeclaracao(texto, categoria);
+
+  if (tipoAtivo && assunto) {
     const registrosRelacionados = localizarRegistrosRelacionados(
       memoria,
       categoria,
       tipoAtivo,
+      assunto,
     );
 
     if (registrosRelacionados.length > 0) {
@@ -429,15 +548,26 @@ function identificarInformacaoRelevante(mensagem) {
   }
 
   // Mantém o comportamento anterior para outras atualizações explícitas.
+  // Em estudos e projetos, limita a comparação ao mesmo assunto.
   if (indicaAtualizacao(texto)) {
     const registrosAntigos = memoria.categorias[categoria] ?? [];
 
-    if (registrosAntigos.length > 0) {
+    const registrosParaAtualizar =
+      categoria === "estudos" || categoria === "projetos"
+        ? registrosAntigos.filter((registro) => {
+            return (
+              assunto &&
+              extrairAssuntoDeclaracao(registro.texto, categoria) === assunto
+            );
+          })
+        : registrosAntigos;
+
+    if (registrosParaAtualizar.length > 0) {
       return {
         modo: "atualizacao",
         texto,
         categoria,
-        registros: registrosAntigos,
+        registros: registrosParaAtualizar,
       };
     }
   }
