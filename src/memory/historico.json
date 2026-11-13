@@ -1169,6 +1169,186 @@
         }
       ],
       "data": "2026-11-13T19:15:02.057Z"
+    },
+    {
+      "role": "user",
+      "parts": [
+        {
+          "text": "Estou estudando Python para análise de dados."
+        }
+      ],
+      "data": "2026-11-13T19:17:52.337Z"
+    },
+    {
+      "role": "model",
+      "parts": [
+        {
+          "text": "Essa informação já consta na minha memória permanente. Não vou criar outro registro."
+        }
+      ],
+      "data": "2026-11-13T19:17:52.337Z"
+    },
+    {
+      "role": "user",
+      "parts": [
+        {
+          "text": "Estou estudando Python para desenvolvimento web."
+        }
+      ],
+      "data": "2026-11-13T19:18:03.790Z"
+    },
+    {
+      "role": "model",
+      "parts": [
+        {
+          "text": "Posso guardar essa informação na minha memória permanente para utilizar em conversas futuras? Responda SIM ou NÃO."
+        }
+      ],
+      "data": "2026-11-13T19:18:03.790Z"
+    },
+    {
+      "role": "user",
+      "parts": [
+        {
+          "text": "sim"
+        }
+      ],
+      "data": "2026-11-13T19:18:13.710Z"
+    },
+    {
+      "role": "model",
+      "parts": [
+        {
+          "text": "Informação salva na categoria \"projetos\"."
+        }
+      ],
+      "data": "2026-11-13T19:18:13.710Z"
+    },
+    {
+      "role": "user",
+      "parts": [
+        {
+          "text": "Estou aprendendo Python para desenvolvimento web."
+        }
+      ],
+      "data": "2026-11-13T19:18:25.607Z"
+    },
+    {
+      "role": "model",
+      "parts": [
+        {
+          "text": "Posso guardar essa informação na minha memória permanente para utilizar em conversas futuras? Responda SIM ou NÃO."
+        }
+      ],
+      "data": "2026-11-13T19:18:25.607Z"
+    },
+    {
+      "role": "user",
+      "parts": [
+        {
+          "text": "Estou estudando Python para desenvolvimento web."
+        }
+      ],
+      "data": "2026-11-13T19:20:57.489Z"
+    },
+    {
+      "role": "model",
+      "parts": [
+        {
+          "text": "Essa informação já consta na minha memória permanente. Não vou criar outro registro. Também corrigi a categoria do registro existente."
+        }
+      ],
+      "data": "2026-11-13T19:20:57.489Z"
+    },
+    {
+      "role": "user",
+      "parts": [
+        {
+          "text": "Estou aprendendo Python para desenvolvimento web."
+        }
+      ],
+      "data": "2026-11-13T19:21:04.825Z"
+    },
+    {
+      "role": "model",
+      "parts": [
+        {
+          "text": "Essa informação já consta na minha memória permanente. Não vou criar outro registro."
+        }
+      ],
+      "data": "2026-11-13T19:21:04.825Z"
+    },
+    {
+      "role": "user",
+      "parts": [
+        {
+          "text": "Estou estudando Python para automação."
+        }
+      ],
+      "data": "2026-11-13T19:21:13.857Z"
+    },
+    {
+      "role": "model",
+      "parts": [
+        {
+          "text": "Posso guardar essa informação na minha memória permanente para utilizar em conversas futuras? Responda SIM ou NÃO."
+        }
+      ],
+      "data": "2026-11-13T19:21:13.857Z"
+    },
+    {
+      "role": "user",
+      "parts": [
+        {
+          "text": "sim"
+        }
+      ],
+      "data": "2026-11-13T19:21:16.523Z"
+    },
+    {
+      "role": "model",
+      "parts": [
+        {
+          "text": "Informação salva na categoria \"estudos\"."
+        }
+      ],
+      "data": "2026-11-13T19:21:16.523Z"
+    },
+    {
+      "role": "user",
+      "parts": [
+        {
+          "text": "Estou estudando JavaScript para desenvolvimento web."
+        }
+      ],
+      "data": "2026-11-13T19:21:26.326Z"
+    },
+    {
+      "role": "model",
+      "parts": [
+        {
+          "text": "Essa informação já consta na minha memória permanente. Não vou criar outro registro. Também corrigi a categoria do registro existente."
+        }
+      ],
+      "data": "2026-11-13T19:21:26.326Z"
+    },
+    {
+      "role": "user",
+      "parts": [
+        {
+          "text": "O que estou estudando?"
+        }
+      ],
+      "data": "2026-11-13T19:21:34.233Z"
+    },
+    {
+      "role": "model",
+      "parts": [
+        {
+          "text": "Agora estou estudando Python para desenvolver aplicações.\nEstou estudando JavaScript e pretendo trabalhar com programação.\nEstou aprendendo Python para desenvolver aplicações.\nEstou aprendendo Python para criar meus próprios sistemas\nEstou aprendendo Python.\nAgora estou estudando Java para ampliar meus conhecimentos em programação.\nEstou estudando Python para análise de dados.\nEstou estudando Python para desenvolvimento web.\nEstou estudando Python para automação.\nEstou estudando JavaScript para desenvolvimento web."
+        }
+      ],
+      "data": "2026-11-13T19:21:34.233Z"
     }
   ]
 }
