@@ -148,7 +148,7 @@ function identificarCategoria(texto) {
   return "geral";
 }
 
-// Verifica se a frase indica uma possível atualização.
+// Verifica se a frase indica uma possível atualização explícita.
 function indicaAtualizacao(texto) {
   const t = normalizar(texto);
 
@@ -167,6 +167,52 @@ function indicaAtualizacao(texto) {
   ];
 
   return indicadores.some((regra) => regra.test(t));
+}
+
+// V2.1: reconhece declarações atuais sobre estudos e projetos,
+// mesmo quando o usuário não utiliza palavras como "agora" ou "mudei".
+function identificarTipoDeclaracaoAtiva(texto, categoria) {
+  const t = normalizar(texto);
+
+  if (categoria === "estudos") {
+    const padroes = [
+      /\bestou estudando\b/,
+      /\bestou aprendendo\b/,
+      /\bestou fazendo curso\b/,
+      /\bquero aprender\b/,
+      /\bpretendo aprender\b/,
+      /\bestudo\b/,
+      /\bmeu curso\b/,
+    ];
+
+    return padroes.some((regra) => regra.test(t)) ? "estudo_ativo" : null;
+  }
+
+  if (categoria === "projetos") {
+    const padroes = [
+      /\bmeu projeto\b/,
+      /\bmeu aplicativo\b/,
+      /\bmeu sistema\b/,
+      /\bmeu site\b/,
+      /\bestou desenvolvendo\b/,
+      /\bestou criando\b/,
+      /\bpretendo desenvolver\b/,
+    ];
+
+    return padroes.some((regra) => regra.test(t)) ? "projeto_ativo" : null;
+  }
+
+  return null;
+}
+
+// Verifica se uma declaração antiga pertence ao mesmo tipo
+// de informação ativa da nova declaração.
+function localizarRegistrosRelacionados(memoria, categoria, tipo) {
+  const registros = memoria.categorias[categoria] ?? [];
+
+  return registros.filter((registro) => {
+    return identificarTipoDeclaracaoAtiva(registro.texto, categoria) === tipo;
+  });
 }
 
 function processarComandoMemoria(mensagem) {
@@ -347,6 +393,8 @@ function identificarInformacaoRelevante(mensagem) {
     return null;
   }
 
+  // Se a informação já existe, encerra a análise aqui.
+  // Isso impede que a mesma frase também seja tratada como atualização.
   if (informacaoJaExiste(texto)) {
     return {
       jaExiste: true,
@@ -355,12 +403,33 @@ function identificarInformacaoRelevante(mensagem) {
   }
 
   const categoria = identificarCategoria(texto);
-
   const projeto = categoria === "projetos";
 
-  // Verifica se a frase indica uma atualização de informação anterior.
+  const memoria = obterMemoria();
+
+  // V2.1: procura declarações anteriores do mesmo tipo,
+  // mesmo quando a nova frase não contém um indicador explícito de atualização.
+  const tipoAtivo = identificarTipoDeclaracaoAtiva(texto, categoria);
+
+  if (tipoAtivo) {
+    const registrosRelacionados = localizarRegistrosRelacionados(
+      memoria,
+      categoria,
+      tipoAtivo,
+    );
+
+    if (registrosRelacionados.length > 0) {
+      return {
+        modo: "atualizacao",
+        texto,
+        categoria,
+        registros: registrosRelacionados,
+      };
+    }
+  }
+
+  // Mantém o comportamento anterior para outras atualizações explícitas.
   if (indicaAtualizacao(texto)) {
-    const memoria = obterMemoria();
     const registrosAntigos = memoria.categorias[categoria] ?? [];
 
     if (registrosAntigos.length > 0) {
@@ -628,6 +697,51 @@ export async function perguntarAoJarvis(mensagem) {
     return finalizarInteracao(mensagem, resposta);
   }
 
+  // A análise da memória acontece ANTES de chamar o Gemini.
+  // Assim, o modelo não pode repetir ou inventar confirmações de memória
+  // com base em mensagens antigas do histórico.
+  const informacao = identificarInformacaoRelevante(mensagem);
+
+  if (informacao?.jaExiste) {
+    return finalizarInteracao(
+      mensagem,
+      "Essa informação já consta na minha memória permanente. Não vou criar outro registro.",
+    );
+  }
+
+  if (informacao?.modo === "atualizacao") {
+    memoriaPendente = informacao;
+
+    const listaRegistros = informacao.registros
+      .map((item, indice) => `${indice + 1}. ${item.texto}`)
+      .join("\n");
+
+    const textoResposta = `Identifiquei uma possível atualização na categoria "${informacao.categoria}".
+
+Registros relacionados atualmente salvos:
+${listaRegistros}
+
+Nova informação:
+${informacao.texto}
+
+O que deseja fazer?
+
+- Para substituir, informe SUBSTITUIR seguido do número do registro. Exemplo: SUBSTITUIR 1.
+- Para conservar o registro antigo e adicionar a nova informação, responda MANTER.
+- Para desistir sem alterar a memória, responda CANCELAR.`;
+
+    return finalizarInteracao(mensagem, textoResposta);
+  }
+
+  if (informacao) {
+    memoriaPendente = informacao;
+
+    return finalizarInteracao(
+      mensagem,
+      "Posso guardar essa informação na minha memória permanente para utilizar em conversas futuras? Responda SIM ou NÃO.",
+    );
+  }
+
   console.log("Enviando mensagem para o Gemini...");
 
   const historico = obterHistorico().map((item) => ({
@@ -659,43 +773,8 @@ ${contextoHistorico}
     },
   });
 
-  let textoResposta =
+  const textoResposta =
     resposta.text || "Desculpe, senhor Saulo. Não consegui gerar uma resposta.";
-
-  // A decisão de salvar ou atualizar é feita pelo código.
-  const informacao = identificarInformacaoRelevante(mensagem);
-
-  if (informacao?.jaExiste) {
-    textoResposta +=
-      "\n\nEssa informação já consta na minha memória permanente. Não vou criar outro registro.";
-  } else if (informacao?.modo === "atualizacao") {
-    memoriaPendente = informacao;
-
-    const listaRegistros = informacao.registros
-      .map((item, indice) => `${indice + 1}. ${item.texto}`)
-      .join("\n");
-
-    textoResposta += `
-
-Identifiquei uma possível atualização na categoria "${informacao.categoria}".
-
-Registros atualmente salvos:
-${listaRegistros}
-
-Nova informação:
-${informacao.texto}
-
-O que deseja fazer?
-
-- Para substituir, informe SUBSTITUIR seguido do número do registro. Exemplo: SUBSTITUIR 1.
-- Para conservar o registro antigo e adicionar a nova informação, responda MANTER.
-- Para desistir sem alterar a memória, responda CANCELAR.`;
-  } else if (informacao) {
-    memoriaPendente = informacao;
-
-    textoResposta +=
-      "\n\nPosso guardar essa informação na minha memória permanente para utilizar em conversas futuras? Responda SIM ou NÃO.";
-  }
 
   finalizarInteracao(mensagem, textoResposta);
 

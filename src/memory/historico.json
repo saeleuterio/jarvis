@@ -971,6 +971,42 @@
         }
       ],
       "data": "2026-11-09T19:51:13.013Z"
+    },
+    {
+      "role": "user",
+      "parts": [
+        {
+          "text": "Estou estudando Python para desenvolver aplicações."
+        }
+      ],
+      "data": "2026-11-09T19:59:41.211Z"
+    },
+    {
+      "role": "model",
+      "parts": [
+        {
+          "text": "Compreendido, Saulo! Já tenho registrado em sua memória que você está estudando Python para desenvolver aplicações.\n\nEssa informação já consta na minha memória permanente, então não vou criar outro registro. Se precisar de alguma dica, recurso ou tiver dúvidas sobre Python, pode me perguntar!\n\nIdentifiquei uma possível atualização na categoria \"estudos\".\n\nRegistros atualmente salvos:\n1. Agora estou estudando Python para desenvolver aplicações.\n2. Estou estudando JavaScript e pretendo trabalhar com programação.\n3. Estou aprendendo Python para desenvolver aplicações.\n4. Estou aprendendo Python para criar meus próprios sistemas\n5. Estou aprendendo Python.\n6. Agora estou estudando Java para ampliar meus conhecimentos em programação.\n\nNova informação:\nEstou estudando Python para desenvolver aplicações.\n\nO que deseja fazer?\n\n- Para substituir, informe SUBSTITUIR seguido do número do registro. Exemplo: SUBSTITUIR 1.\n- Para conservar o registro antigo e adicionar a nova informação, responda MANTER.\n- Para desistir sem alterar a memória, responda CANCELAR.\n\nIdentifiquei uma possível atualização na categoria \"estudos\".\n\nRegistros relacionados atualmente salvos:\n1. Agora estou estudando Python para desenvolver aplicações.\n2. Estou estudando JavaScript e pretendo trabalhar com programação.\n3. Estou aprendendo Python para desenvolver aplicações.\n4. Estou aprendendo Python para criar meus próprios sistemas\n5. Estou aprendendo Python.\n6. Agora estou estudando Java para ampliar meus conhecimentos em programação.\n\nNova informação:\nEstou estudando Python para desenvolver aplicações.\n\nO que deseja fazer?\n\n- Para substituir, informe SUBSTITUIR seguido do número do registro. Exemplo: SUBSTITUIR 1.\n- Para conservar o registro antigo e adicionar a nova informação, responda MANTER.\n- Para desistir sem alterar a memória, responda CANCELAR."
+        }
+      ],
+      "data": "2026-11-09T19:59:41.211Z"
+    },
+    {
+      "role": "user",
+      "parts": [
+        {
+          "text": "Estou estudando Python para desenvolver aplicações."
+        }
+      ],
+      "data": "2026-11-13T19:01:36.631Z"
+    },
+    {
+      "role": "model",
+      "parts": [
+        {
+          "text": "Identifiquei uma possível atualização na categoria \"estudos\".\n\nRegistros relacionados atualmente salvos:\n1. Agora estou estudando Python para desenvolver aplicações.\n2. Estou estudando JavaScript e pretendo trabalhar com programação.\n3. Estou aprendendo Python para desenvolver aplicações.\n4. Estou aprendendo Python para criar meus próprios sistemas\n5. Estou aprendendo Python.\n6. Agora estou estudando Java para ampliar meus conhecimentos em programação.\n\nNova informação:\nEstou estudando Python para desenvolver aplicações.\n\nO que deseja fazer?\n\n- Para substituir, informe SUBSTITUIR seguido do número do registro. Exemplo: SUBSTITUIR 1.\n- Para conservar o registro antigo e adicionar a nova informação, responda MANTER.\n- Para desistir sem alterar a memória, responda CANCELAR."
+        }
+      ],
+      "data": "2026-11-13T19:01:36.631Z"
     }
   ]
 }
